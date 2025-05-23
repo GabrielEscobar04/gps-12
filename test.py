@@ -17,6 +17,7 @@ class TestStringMethods(unittest.TestCase):
     def test_is_lower(self):
         """Test that the to_lower_case function correctly converts a string to lowercase."""
         string_val = transform.to_lower_case("HELLO")
+        self.assertEqual(string_val, "hello")
 
     def test_is_capitalize(self):
         """Test that the to_capitalize function correctly capitalizes a string."""
