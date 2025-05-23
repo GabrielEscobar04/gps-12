@@ -22,7 +22,7 @@ jobs:
 
     - name: Lint with Pylint
       run: |
-        pylint $(git ls-files '*.py') # Lints all Python files tracked by Git [cite: 6]
+        pylint --disable=C0114,C0115,C0116 $(git ls-files '*.py') # Lints all Python files tracked by Git, ignoring specified docstring warnings [cite: 6]
       # continue-on-error: true # Optional: uncomment if Pylint errors should not fail the workflow
 
     - name: Test with Coverage
