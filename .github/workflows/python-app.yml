@@ -1,0 +1,39 @@
+name: Python application CI
+
+on: [push, pull_request] # Triggers the workflow on push or pull request events
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3 # Checks out your repository under $GITHUB_WORKSPACE
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint coverage
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi # Installs from requirements.txt if it exists [cite: 6]
+
+    - name: Lint with Pylint
+      run: |
+        pylint $(git ls-files '*.py') # Lints all Python files tracked by Git [cite: 6]
+      # continue-on-error: true # Optional: uncomment if Pylint errors should not fail the workflow
+
+    - name: Test with Coverage
+      run: |
+        coverage run test.py # Runs tests with coverage [cite: 6]
+        coverage report -m   # Prints coverage report to stdout
+        coverage xml         # Generates coverage.xml
+    
+    - name: Upload coverage to Codecov (Optional)
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }} # Optional: if you use Codecov.io
+        file: ./coverage.xml
+        fail_ci_if_error: true
